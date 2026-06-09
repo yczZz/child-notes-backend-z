@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>宝宝手记 · 后台管理</title>
+  <link rel="stylesheet" href="/admin/css/admin.css" />
+</head>
+<body>
+<div id="app">
+  <div class="admin-loading">Loading admin console...</div>
+</div>
+
+<script>
+  window.__adminDependencyError = false;
+  window.__markAdminDependencyError = function () {
+    window.__adminDependencyError = true;
+  };
+</script>
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js" onerror="window.__markAdminDependencyError()"></script>
+<script src="https://unpkg.com/naive-ui/dist/index.prod.js" onerror="window.__markAdminDependencyError()"></script>
+<script type="module">
+  async function mountFallback(reason) {
+    console.warn("Using admin fallback UI:", reason);
+    const mod = await import("/admin/modules/fallback.js");
+    mod.mountAdminFallback(document.getElementById("app"), reason);
+  }
+
+  if (window.Vue && window.naive && !window.__adminDependencyError) {
+    import("/admin/modules/app.js").catch((error) => mountFallback(error.message || "admin app failed"));
+  } else {
+    mountFallback("Vue or Naive UI CDN failed to load");
+  }
+</script>
+</body>
+</html>
